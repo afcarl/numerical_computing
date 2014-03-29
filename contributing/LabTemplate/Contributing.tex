@@ -73,3 +73,36 @@ This must be done before importing \li{matplotlib.pyplot}.
 \item The solution to the problem must be reproducible.  Do not rely random numbers unless you fix the seed.
 \item Each problem should be uniquely labeled across the entire lab volume.
 \end{itemize}
+
+\section{Python Code}
+There are a few guidelines that attempt to make the code in the project well-documented, consistent, and readable.
+
+All code in the project must adhere to PEP8 (\url{http://legacy.python.org/dev/peps/pep-0008/}).
+
+\begin{itemize}
+\item No code should be executed on import
+\item Importing scipy and pylab is highly discouraged.  Use the functions from their proper location.
+\item All code must run cross-platform without modification
+\item All libraries used must be available for Linus, OSX, and Windows.
+\item All code must be properly organized and decomposed in appropriate files, classes, and functions.
+\item Any global or lazy import are strictly forbidden
+\item No time consuming code should run on import
+\end{itemize}
+
+\subsection{Solutions}
+\begin{itemize}
+\item Function names must correspond to the problem label.  Example: <prob:newton_1d> should have a corresponding solution with a function name of \li{def newton_1d(...)}.
+\item Each function should be documented in an unambiguous manner.  All inputs and outputs of the function must be detailed.
+\item The solutions must be verifably correct.
+\end{itemize}
+
+\subsection{Plots.py}
+\begin{itemize}
+\item All plots must be wrapped in functions
+\item No interactive plotting features of matplotlib should be used.  Never use the \li{show()} method on a plot.  Always write to plot directly to file.
+\item Always import the project's \texttt{matplotlibrc} file in the first two lines of code
+\item Always output plots to a vector pdf with a filename that agrees with the function name and the plot label.
+\end{itemize}
+
+
+

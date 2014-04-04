@@ -1,8 +1,8 @@
-\lab{Template Lab}{Template Lab}
+\lab{}{Template Lab}{Template Lab}
 \objective{Outline the various guidelines and practices of writing a new lab.}
 \label{lab:template}
 
-\section{General Guidelines}
+\section*{General Guidelines}
 \begin{itemize}
 \item No datasets or other data files should be committed to the repository.  This makes the repository unnecessarily large.  Data files are distributed via other means.  This is a strictly enforced requirement.  Even if you mistakenly commit a dataset and remove it later, git records the file in its history.  Any pull requests with data sets in the history will not be accepted.
 \item Do not commit large images to the 
@@ -10,7 +10,7 @@
 \end{itemize}
 
 
-\section{\LaTeX File}
+\section*{\LaTeX File}
 There are several conventions that we expect new labs to adhere to in regard to their usage of \LaTeX.
 
 The written lab should use professional language with correct spelling and grammar.
@@ -24,13 +24,13 @@ Do not write labs using an overtly casual tone.
 
 \subsection{\LaTeX}
 \begin{itemize}
-\item Use \texttt{\\[\\]} for \texttt{equation} environments for one line equations.  Never use \$\$ ... \$\$ for math mode.
+\item Use \texttt{\textbackslash{[}\textbackslash{]}} for \texttt{equation} environments for one line equations.  Never use \$\$ ... \$\$ for math mode.
 \item Use \$ ... \$ for inline equations
-\item \emph{Do not} use \texttt{\\frac} for inline equations.  One half should be represented at $1/2$. \emph{Do use} fractions for the other math environments.
+\item \emph{Do not} use \texttt{\textbackslash{frac}} for inline equations.  One half should be represented at $1/2$. \emph{Do use} fractions for the other math environments.
 \item Do not include editor/user specific lines in your \LaTeX document.
-\item Use the global math commands that are defined for all the lab manuals.  The most common commands are: \texttt{\\norm}, \texttt{\\abs}, \texttt{\\set}, and \texttt{\\setconstruct}.
+\item Use the global math commands that are defined for all the lab manuals.  The most common commands are: \texttt{\textbackslash{norm}}, \texttt{\textbackslash{abs}}, \texttt{\textbackslash{set}}, and \texttt{\textbackslash{setconstruct}}.
 \item You are permitted to define variables and commands inside your lab \emph{only} if you undefine them at the end of you lab.  If you think your new command may be useful for more than just your lab, you may add it to the project wide \texttt{command.tex} file.
-\item Labels follow a format of <type:name>.  The accepted types of labels are: 'fig' for figures, 'eqn' for equations, 'lab' for labs, 'table' for tables, 'prob' for problems, 'lst' for listings, 'sec' for sections.
+\item Labels follow a format of \textless type:name\textgreater.  The accepted types of labels are: `fig' for figures, `eqn' for equations, `lab' for labs, `table' for tables, `prob' for problems, `lst' for listings, `sec' for sections.
 \end{itemize}
 
 
@@ -91,18 +91,22 @@ All code in the project must adhere to PEP8 (\url{http://legacy.python.org/dev/p
 
 \subsection{Solutions}
 \begin{itemize}
-\item Function names must correspond to the problem label.  Example: <prob:newton_1d> should have a corresponding solution with a function name of \li{def newton_1d(...)}.
+\item Function names must correspond to the problem label.  Example: \textless prob:newton\_1d\textgreater should have a corresponding solution with a function name of \li{def newton_1d(...)}.
 \item Each function should be documented in an unambiguous manner.  All inputs and outputs of the function must be detailed.
 \item The solutions must be verifably correct.
 \end{itemize}
 
 \subsection{Plots.py}
+Plots are designed to be automatically generated.
+To accomplish this goal, your \texttt{plots.py} file needs follow a specified structure.
 \begin{itemize}
+\item Always import the project's \texttt{matplotlibrc} file in the first two lines of code
 \item All plots must be wrapped in functions
 \item No interactive plotting features of matplotlib should be used.  Never use the \li{show()} method on a plot.  Always write to plot directly to file.
-\item Always import the project's \texttt{matplotlibrc} file in the first two lines of code
 \item Always output plots to a vector pdf with a filename that agrees with the function name and the plot label.
 \end{itemize}
+Below is a sample \texttt{plots.py}.
+\lstinputlisting{plots.py}
 
 
 

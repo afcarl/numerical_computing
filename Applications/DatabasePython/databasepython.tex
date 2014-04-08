@@ -1,0 +1,120 @@
+#Outline for SQL basics in Python
+\lab{Applications}{Databases in Python}{Databases in Python}
+\objective{Learn to interface MySQL with python}
+\label{lab:DbPython}
+
+\section*{Introduction}
+Many businesses and other organizations will have MySQL or similar databases with large amounts of data in them.  
+
+In this section we will learn how to move data from MySQL to python.  MySQL is a good solution for the permanent storage of data.  Python is an excellent tool for data cleaning, manipulation, and analysis.   There are several packages that are available that allow python to interface with MySQL.  In this section, we will learn how to use MySQLdb.  Other packages that provide similar functionality are pyodbc, sqlalchemy, and TODO.
+
+Recall from the previous lab that MySQL runs a server and that we queried the server via a terminal.  In this lab we will be querying the server from python.  As such, we need to make sure that MySQL is running before we continue.  We can do this using a program called mysqladmin (usually located in the \\bin directory under your MySQL Server installation location) and the status keyword, as follows
+
+\begin{lstlisting}[style=ShellInput]
+mysqladmin -u root -p status
+Enter password: 
+Uptime: 1901590  Threads: 1  Questions: 132  Slow queries: 0  Opens: 39  Flush tables: 1  Open tables: 28  Queries per second avg: 0.000
+\end{lstlisting}
+
+If the server is not running, then the output would look something like
+
+\begin{lstlisting}[style=ShellInput]
+
+mysqladmin: connect to server at 'localhost' failed
+error: 'Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)'
+Check that mysqld is running and that the socket: '/var/run/mysqld/mysqld.sock' exists!
+
+\end{lstlisting}
+
+If the server is not running, launch it using the technique from the previous section.
+
+\section{Connecting to MySQL with MySQLdb}
+
+\subsection{Creating a Connection}
+
+We will use MySQLdb connection and cursor objects.  A connection object will connect to a specific database on a given database server.  The cursor object is used to move queries back and forth from python to the MySQL server.  For example we may connect to a database on the MySQL server running on our local machine as follows:
+
+\begin{lstlisting}
+
+import MySQLdb
+
+db = MySQLdb.connect('localhost', 'root', '', 'students')
+
+\end{lstlisting}
+
+The arguments are strings telling us the location of the server we want to connect to, the username with which to log in, the corresponding password, and finally the database that we want to query.  We note here that we may only connect to one databse per connection object.  If you want to connect to a different database, you will need to make a different connection object.
+
+\subsection{Creating and Using Cursor Objects}
+
+Now that we have connected to a database, we create a cursor object for the connection that will allow us to send queries and receive data.  Think of the cursor object as a mysql terminal within your python code.
+
+\begin{lstlisting}
+
+cursor = db.cursor()
+
+\end{lstlisting}
+
+Cursor objects have an {\tt execute()} method that will execute any valid MySQL command.  For example, we can execute a select command on our student table
+
+\begin{lstlisting}
+cursor.execute("SELECT * FROM student_information;")
+
+\end{lstlisting}
+
+The execute command returns the number of rows affected by the query.  In order to get to the data, we must use one of the cursors several fetch methods.  These are {\tt fetchone()}, {\tt fetchmany()} and {\tt fetchall()}.  These methods get the data stored in the cursor object and puts them in a tuple.  For example, we can query the id numbers and names of the students in our student database:
+
+\begin{lstlisting}
+cursor.execute("SELECT Name FROM student_inf ormation")
+names = cursor.fetchall()
+
+\end{lstlisting}
+
+The names object will be a tuple of 2-tuples containing the id number and name for each student.  The {\tt fetchone()} works similarly and {\tt fetchmany()} fetches a specified number of rows.
+
+
+\begin{problem}
+
+Using your matrix program from the previous section, make random databases with 100, 1000, 10000, and 100000 rows.  Load these into MySQL as separate tables.  Use mysqldb to query all the data from each table and time the operation.  How does the length of time increase?
+
+\end{problem}
+
+\begin{problem}
+
+In this exercise, we will compare joining data in MySQL to python.  We will see that it is more efficient to use a join command in MySQL than use python data structures.
+
+First, use the code you wrote in the previous section to generate 5 random tables of size 100, 1000, 10000, and 100000 rows each.  Recall that the first column will just ascend numerically.  This is the column that we will be joining on.  Create a new database in MySQL called test\_tables and load the generated tables into the database.
+
+Now that the data is loaded, write two methods in python.  The first method should query the tables of the same size and then join them on their first columns in python.  Since we are dealing with strictly numeric data here, it is possible to vectorize this very quickly.  However, in the real world data is often not numeric or nicely ordered, so don't vectorize this method for illustrative purposes.
+
+The second method should accomplish the same thing, however this time join the tables when you query them.  Time each technique.  How do they grow and which is faster?
+\end{problem}
+
+\section{Application: ICD-9 Claims Data}
+
+In this section we will learn about the International Classification of Diseases (ICD).  The ICD is a large colllection of codes used to classify any diagnosis that a doctor would make.  When someone goes to the hospital or doctors office, their visit will be recorded using these codes.  Insurance companies, the government, and researchers find this data useful.  Since it is very precise, working with this data can be very onerous.  There is a differenct code for just about every possible injury to every part of the body.
+
+There are several different versions of the ICD.  For this lab we will be using the ICD-9-CM, which is a version created by the United States National Center for Health Statistics.
+
+\begin{problem}
+
+Download the file CMS31\_DESC\_LONG\_DX.txt.  This file matches each diagnosis code with a long description of the actual diagnosis.  Open the file in a text editor and note how it is delimited.  Create a database in MySQL and load the data into a table.
+
+Now write a python function that will accept accepts a diagnosis code and returns the long description.  If an invalid code is given then it should throw an error.
+
+\end{problem}
+
+\begin{problem}
+
+In this exercise we will write functions in python that could support an interactive application that answers questions about the health of a population.  Download the file icd9\_data.txt.  This file contains simulated health histories for one million persons.  Each line has columns for identification number, gender, age followed by icd-9 codes of various quantities.  We will load this data into MySQL and then use python to learn about it.
+
+\begin{enumerate}
+
+\item Add a table to the database from the previous exercise that can contain the data in icd9\_data.txt.  Note that there is not a fixed number of codes per person.
+\item Write a method in python that queries the gender of each individual.  What proportion of the population is female?
+\item Create a histogram of ages for the entire population and for each gender.
+\item What is the most common code for men under 30?  Older than 45?
+\item What is the most common code for women older than 25 and less than 55?
+\item Write a method that accepts a population id number and returns descriptions of the codes in that persons history.
+
+\end{exercise}
+

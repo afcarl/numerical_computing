@@ -19,7 +19,6 @@ Uptime: 1901590  Threads: 1  Questions: 132  Slow queries: 0  Opens: 39  Flush t
 If the server is not running, then the output would look something like
 
 \begin{lstlisting}[style=ShellInput]
-
 mysqladmin: connect to server at 'localhost' failed
 error: 'Can't connect to local MySQL server through socket '/var/run/mysqld/mysqld.sock' (2)'
 Check that mysqld is running and that the socket: '/var/run/mysqld/mysqld.sock' exists!
@@ -35,7 +34,6 @@ If the server is not running, launch it using the technique from the previous se
 We will use MySQLdb connection and cursor objects.  A connection object will connect to a specific database on a given database server.  The cursor object is used to move queries back and forth from python to the MySQL server.  For example we may connect to a database on the MySQL server running on our local machine as follows:
 
 \begin{lstlisting}
-
 import MySQLdb
 
 db = MySQLdb.connect('localhost', 'root', '', 'students')
@@ -49,7 +47,6 @@ The arguments are strings telling us the location of the server we want to conne
 Now that we have connected to a database, we create a cursor object for the connection that will allow us to send queries and receive data.  Think of the cursor object as a mysql terminal within your python code.
 
 \begin{lstlisting}
-
 cursor = db.cursor()
 
 \end{lstlisting}

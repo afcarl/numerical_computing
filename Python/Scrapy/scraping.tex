@@ -1,21 +1,21 @@
-\lab{Python}{Scrapy}{Standard Library}
-\objective{Teach students how to scrape websites}
+\lab{Python}{Scrapy}{Web Scraping}
+\objective{Teach students how to scrape websites.}
 
-\section*{Scrapying Data}
-Scrapping data from a website is a way to extract structured or unstructured data from the HTML of a page.
+\section*{Scraping Data}
+Scraping data from a website is a way to extract structured or unstructured data from the HTML of a page.
 
-Most websites have APIs that direct people how to take data from the webpage. Often you use the API. You use a scrapying tool if you want to extract data from a website that does not have an API or the data you want is not a part of the API. (Like extracting e-mail addresses of users)
+Most websites have APIs that direct people how to take data from the webpage. Often you use the API. You use a scraping tool if you want to extract data from a website that does not have an API or the data you want is not a part of the API. (Like extracting e-mail addresses of users).  Be careful however, because many website prohibit scraping their content.  Before scraping a website, make sure you are legally able to do so.
 
-There is a nice python package called scrapy that is an application framework for scrapying. This lan follows that you using version 0.16. THe offical documentation can be found at \url{http://doc.scrapy.org/en/latest/}. 
+There is a nice python package called \li{scrapy} that is an application framework for scraping.  The official documentation can be found at \url{http://doc.scrapy.org/en/latest/}. 
 
-Another package is BeautifulSoup the Documentation can be found at \url{http://www.crummy.com/software/BeautifulSoup/bs4/doc/}
+Another package is BeautifulSoup.  The documentation can be found at \url{http://www.crummy.com/software/BeautifulSoup/bs4/doc/}
 
 \begin{info}
-You will making and editing python files in this lab, so you will not be using ipython.
+You will be making and editing python files in this lab, so you will not be using IPython.
 \end{info}
 
 \begin{warn}
-This Lab was written using version 0.16 of scrapy. If you are using a later version the code will not be exactly the same.
+This lab was written using version 0.16 of scrapy. If you are using a later version the code will not be exactly the same.
 \end{warn}
 
 \section*{Setting up}
@@ -27,7 +27,7 @@ scrapy startproject <project name>
 This will create several files. \li{scrapy.cfg} is a configuration file. It will create folder called \li{<project name>} , that contains files \li{items.py}, \li{pipelines.py}, \li{settings.py} and a directory called \li{spiders}. We will use all this files.
 
 \section*{Items}
-Items are like python dictionaries with some addtional functionality. Go to the items.py found in the  \li{<project name>} directory. items are labels for the data that you be storing.
+Items are like python dictionaries with some additional functionality. Go to the \texttt{items.py} found in the  \li{<project name>} directory. Items are labels for the data that you be storing.
 
 \begin{lstlisting}
 from scrapy.item import Item, Field
@@ -39,7 +39,7 @@ class <project name>Item(Item):
 \end{lstlisting}
 
 \section*{Spiders}
-Spiders are classes used to scrape data from a group of websites. You will define calsses that define the initail list of URLs to download, how to follow the links, and how to parse the contents of the pages into your items objects. There are two main spiders. \li{BaseSpider} and \li{CrawlSpider}. A BaseSpider is used for one website and a CrawlSpider used for crawling mulitple websites.
+Spiders are classes used to scrape data from a group of websites. You will define classes that define the initial list of URLs to download, how to follow the links, and how to parse the contents of the pages into your items objects. There are two main spiders. \li{BaseSpider} and \li{CrawlSpider}. A BaseSpider is used for one website and a CrawlSpider used for crawling multiple websites.
 
 We will start with a BaseSpider. Go in your spider directory and create a new file (the name of the file does not matter). Subcalss BaseSpider as shown below. A BaseSpider has three things. A name that is a unique identifier, \li{start_urls} which is a list of URLS from which the spider will begin to crawl from and parse(), a method which will be called with the Response object at the beginning of each url.
 
@@ -69,20 +69,20 @@ Next we are going to explain what is in the parse method.
 
 \section*{Parsing}
 Scrapy uses a mechanism called selectors to extract data from web pages.
-They have thhree methods.
+They have three methods.
 
-the \li{select(path)} method returns a list of selectors, each of them representing nodes by the expression given as the arguement.This involves knowing a little HTML. HTML has elements whose name is enclosed in <>. So in the code above \li{select('//td')} selects  all the \li{<td>} elements. \li{select('//a/text()')} selects the text inside the \li{<a>} elements. the \li{//div[@class="mine"]} selects all the \li{<div>} elements with the attirbute \li{class="mine"}.  
+the \li{select(path)} method returns a list of selectors, each of them representing nodes by the expression given as the argument.This involves knowing a little HTML. HTML has elements whose name is enclosed in <>. So in the code above \li{select('//td')} selects  all the \li{<td>} elements. \li{select('//a/text()')} selects the text inside the \li{<a>} elements. the \li{//div[@class="mine"]} selects all the \li{<div>} elements with the attribute \li{class="mine"}.  
 
-The \li{extract()} methoed return a string with the data selected by the selector.
+The \li{extract()} method return a string with the data selected by the selector.
 
-The \li{re(string)} returns a list of strings extracted by applying the regular espression given as the argument.
+The \li{re(string)} returns a list of strings extracted by applying the regular expression given as the argument.
 
 You can test this in a shell by typing in
 \begin{lstlisting}
 scrapy shell <URL of website>
 \end{lstlisting}
 
-try \li{scrapy shell http://www.dmoz.org/} and \li{hxs.select('//title')}. You will get feedback as if you were using the the \li{hxs.select()} in your code. You can try other methods to see what they do.
+try \li{scrapy shell http://www.dmoz.org/} and \li{hxs.select('//title')}. You will get feedback as if you were using the the \li{hxs.select()} in your code. You can try other methods to see what they do./usr/lib/python2.7/site-packages/cssselect/xpath.pyc
 
 \section*{Storing the data}
 To store the data we use our items. 

@@ -1,25 +1,66 @@
 \lab{Python}{Scrapy}{Web Scraping}
 \objective{Teach students how to scrape websites.}
 
+Web scraping is the process of extracting useful information from websites.
+The process usually involves transforming unstructured data into structured data that is more suitable for analysis.
+A web scraper is usually paired with web crawler that will navigate an entire website.
+
+\begin{warn}
+Web scraping has legal implications.
+Do not scrape copyrighted information without the consent of the copyright owner.
+Many websites, in their terms and conditions agreement, prohibit the practice of crawling their website.
+In all cases, though, you should be extremely careful and considerate when doing any sort of crawling.
+Your code should be carefully written and tested to ensure that there is no unintended behavior.
+\end{warn}
+
+\section*{What Can You Scrape?}
+There are some website that permit the practice of web scraping.
+To ensure that scraping is well-behaved, most websites will tell a crawler what they can and cannot scrape.
+All of this information is included in a text file in the root domain of a website.
+The file is always titled \texttt{robots.txt} and defines considerate behaviors for web crawlers.
+Each robots file has a set of rules that label parts of a website as disallowed.
+Parts of a website that are not disallowed are implied to allow access by web crawlers.
+If a website doesn't have a \texttt{robots.txt} file then you should check
+You crawler should retrieve this file first before making any other requests to the website.
+Many websites will limit crawlers to parts of the sites that will not place a large load on the website's server.
+It is your duty to honor the rules in \texttt{robots.txt} if they exist.
+
+Let's look at an example \texttt{robots.txt}.
+\lstinputlisting[style=FromFile]{robots.txt}
+Python's standard library includes a useful parser for robot files.
+\begin{lstlisting}
+>>> import robotparser as rp
+>>> url = "http://www.dmoz.org/robots.txt"
+>>> robots = rp.RobotFileParser(url)
+\end{lstlisting}
+
+
+
 \section*{Scraping Data}
 Scraping data from a website is a way to extract structured or unstructured data from the HTML of a page.
 
-Most websites have APIs that direct people how to take data from the webpage. Often you use the API. You use a scraping tool if you want to extract data from a website that does not have an API or the data you want is not a part of the API. (Like extracting e-mail addresses of users).  Be careful however, because many website prohibit scraping their content.  Before scraping a website, make sure you are legally able to do so.
+Most websites have APIs that direct people how to take data from the webpage. 
+Often you use the API. 
+You use a scraping tool if you want to extract data from a website that does not have an API or the data you want is not a part of the API. 
+(Like extracting e-mail addresses of users). 
+Be careful however, because many website prohibit scraping their content.  Before scraping a website, make sure you are legally able to do so.
 
-There is a nice python package called \li{scrapy} that is an application framework for scraping.  The official documentation can be found at \url{http://doc.scrapy.org/en/latest/}. 
+There is a nice python package called \li{scrapy} that is an application framework for scraping.  
+The official documentation can be found at \url{http://doc.scrapy.org/en/latest/}. 
 
-Another package is BeautifulSoup.  The documentation can be found at \url{http://www.crummy.com/software/BeautifulSoup/bs4/doc/}
+Another package is BeautifulSoup.  
+The documentation can be found at \url{http://www.crummy.com/software/BeautifulSoup/bs4/doc/}
 
 \begin{info}
 You will be making and editing python files in this lab, so you will not be using IPython.
 \end{info}
 
 \begin{warn}
-This Lab was written using version 0.22 of scrapy. If you are using a different version, the code will not be exactly the same.
+This Lab was written using version 0.22 of scrapy.
+If you are using a different version, the code will not be exactly the same.
 \end{warn}
 
 \section*{Installation}
-
 To learn how to install Scrapy go to the website \url{http://doc.scrapy.org/en/latest/intro/install.html}
 
 \section*{Setting up}
@@ -34,7 +75,8 @@ When you run
 \begin{lstlisting}
 scrapy crawl dmoz -o items.json -t json
 \end{lstlisting}
-which generates a file \li{items.json} where all the scraped items are serialized in JSON. You can also store them in csv or xml by changing all the json to csv or xml.
+which generates a file \li{items.json} where all the scraped items are serialized in JSON.
+You can also store them in csv or xml by changing all the json to csv or xml.
 For example
 \begin{lstlisting}
 scrapy crawl dmoz -o items.csv -t csv
@@ -46,10 +88,15 @@ To begin a project go to the directory where you want to store the code and run
 \begin{lstlisting}
 scrapy startproject <project name>
 \end{lstlisting}
-This will create several files. \li{scrapy.cfg} is a configuration file. It will create folder called \li{<project name>} , that contains files \li{items.py}, \li{pipelines.py}, \li{settings.py} and a directory called \li{spiders}. We will use all this files.
+This will create several files. 
+\li{scrapy.cfg} is a configuration file.
+It will create folder called \li{<project name>} , that contains files \li{items.py}, \li{pipelines.py}, \li{settings.py} and a directory called \li{spiders}.
+We will use all this files.
 
 \section*{Items}
-Items are like python dictionaries with some additional functionality. Go to the \texttt{items.py} found in the  \li{<project name>} directory. Items are labels for the data that you be storing.
+Items are like python dictionaries with some additional functionality.
+Go to the \texttt{items.py} found in the  \li{<project name>} directory.
+Items are labels for the data that you be storing.
 
 \begin{lstlisting}
 from scrapy.item import Item, Field
@@ -61,9 +108,16 @@ class <project name>Item(Item):
 \end{lstlisting}
 
 \section*{Spiders}
-Spiders are classes used to scrape data from a group of websites. You will define classes that define the initial list of URLs to download, how to follow the links, and how to parse the contents of the pages into your items objects. There are two main spiders. \li{BaseSpider} and \li{CrawlSpider}. A BaseSpider is used for one website and a CrawlSpider used for crawling multiple websites.
+Spiders are classes used to scrape data from a group of websites.
+You will define classes that define the initial list of URLs to download, how to follow the links, and how to parse the contents of the pages into your items objects.
+There are two main spiders. \li{BaseSpider} and \li{CrawlSpider}.
+A BaseSpider is used for one website and a CrawlSpider used for crawling multiple websites.
 
-We will start with a BaseSpider. Go in your spider directory and create a new file (the name of the file does not matter). Subcalss BaseSpider as shown below. A BaseSpider has three things. A name that is a unique identifier, \li{start_urls} which is a list of URLS from which the spider will begin to crawl from and parse(), a method which will be called with the Response object at the beginning of each url.
+We will start with a BaseSpider.
+Go in your spider directory and create a new file (the name of the file does not matter).
+Subcalss BaseSpider as shown below.
+A BaseSpider has three things.
+A name that is a unique identifier, \li{start_urls} which is a list of URLS from which the spider will begin to crawl from and parse(), a method which will be called with the Response object at the beginning of each url.
 
 the following is an example.
 \begin{lstlisting}
@@ -93,7 +147,12 @@ Next we are going to explain what is in the parse method.
 Scrapy uses a mechanism called selectors to extract data from web pages.
 They have three methods.
 
-the \li{select(path)} method returns a list of selectors, each of them representing nodes by the expression given as the argument.This involves knowing a little HTML. HTML has elements whose name is enclosed in <>. So in the code above \li{select('//td')} selects  all the \li{<td>} elements. \li{select('//a/text()')} selects the text inside the \li{<a>} elements. the \li{//div[@class="mine"]} selects all the \li{<div>} elements with the attribute \li{class="mine"}.  
+the \li{select(path)} method returns a list of selectors, each of them representing nodes by the expression given as the argument.
+This involves knowing a little HTML.
+HTML has elements whose name is enclosed in <>.
+So in the code above \li{select('//td')} selects  all the \li{<td>} elements.
+\li{select('//a/text()')} selects the text inside the \li{<a>} elements.
+the \li{//div[@class="mine"]} selects all the \li{<div>} elements with the attribute \li{class="mine"}.  
 
 The \li{extract()} method return a string with the data selected by the selector.
 
@@ -104,7 +163,10 @@ You can test this in a shell by typing in
 scrapy shell <URL of website>
 \end{lstlisting}
 
-try \li{scrapy shell http://www.dmoz.org/} and \li{hxs.select('//title')}. You will get feedback as if you were using the the \li{hxs.select()} in your code. You can try other methods to see what they do./usr/lib/python2.7/site-packages/cssselect/xpath.pyc
+try \li{scrapy shell http://www.dmoz.org/} and \li{hxs.select('//title')}. 
+You will get feedback as if you were using the the \li{hxs.select()} in your code.
+You can try other methods to see what they do.
+/usr/lib/python2.7/site-packages/cssselect/xpath.pyc
 
 \section*{Storing the data}
 To store the data we use our items. 
@@ -152,20 +214,32 @@ Then I would go to the top directory and run
 \begin{lstlisting}
 scrapy crawl dmoz -o items.json -t json
 \end{lstlisting}
-which will generate a file \li{items.json} where all the scraped items are serialized in JSON. You can also store them in csv or xml by changing all the json to csv or xml.
+which will generate a file \li{items.json} where all the scraped items are serialized in JSON.
+You can also store them in csv or xml by changing all the json to csv or xml.
 
 \end{comment}
 
 \section*{Crawling the Web}
 This follows the section \url{http://doc.scrapy.org/en/latest/topics/spiders.html} subsection CrawlSpider.
 
-The spider you wrote from the tutorial will only scrape one page. In order to scrape more pages you will need to inherit from \li{CrawlSpider}. The main difference is you set a list of rules for how you spider clicks on links and you do not overwrite the parse() method.
+The spider you wrote from the tutorial will only scrape one page. 
+In order to scrape more pages you will need to inherit from \li{CrawlSpider}. 
+The main difference is you set a list of rules for how you spider clicks on links and you do not overwrite the parse() method.
 
 \begin{warn}
 When using a \li{CrawlSpider} do not overwrite the \li{parse} method.
 \end{warn}
 
-For example if I were scrapying the ESPN website for basketball statistics (do not do because it is illegal to scrape data the ESPN website), this code would start of the mainpage and click are the links as specified in the rules. So below I made a\li{rule} list and for each rule I cread a \li{Rule} object. The first varible a takes in is a link extractor. the most common one is the li{SgmlLinkExtractor}. Two of its many attributes it has is \li{allow} and \li{deny}. \li{allow} takes in a list of strings and will click on those links has those words in the url. \li{deny} also takes in a list of strings and will not click on links with those words in the url. \li{deny} has higher precedence than \li{allow}. For a \li{Rule} object you set \li{callback} as a string of the method that parses the pages that you click on with the link extractor.  And than you set \li{follow=True} which means that it will click on those links.
+For example if I were scrapying the ESPN website for basketball statistics (do not do because it is illegal to scrape data the ESPN website), this code would start of the mainpage and click are the links as specified in the rules.
+So below I made a\li{rule} list and for each rule I cread a \li{Rule} object.
+The first varible a takes in is a link extractor.
+the most common one is the li{SgmlLinkExtractor}.
+Two of its many attributes it has is \li{allow} and \li{deny}.
+\li{allow} takes in a list of strings and will click on those links has those words in the url. 
+\li{deny} also takes in a list of strings and will not click on links with those words in the url.
+\li{deny} has higher precedence than \li{allow}.
+For a \li{Rule} object you set \li{callback} as a string of the method that parses the pages that you click on with the link extractor.
+And than you set \li{follow=True} which means that it will click on those links.
 
 The following code will go to the espn nba statistics website and click on the links that have \li{'statistics/team/_/stat'} in the name but not \li{'sort'} and scrape those webpages.
 
@@ -202,9 +276,14 @@ class EspnSpider(CrawlSpider):
 \section*{Pipelining}
 
 The documentation can be found \url{http://doc.scrapy.org/en/latest/topics/item-pipeline.html}
-Now you have a spider that crawls the web and dumps all the data into csv or json file. For some applications that will be enough. 
+Now you have a spider that crawls the web and dumps all the data into csv or json file.
+For some applications that will be enough. 
 
-In addition you can cleanse the data or put it into a database via pipelining. In your directory \li{<project name>} you will have a file called \li{pipelines.py}. In this file you can create a class that has three methods \li{process_item(item, spider)}, \li{open_spider(spider)} and \li{close_spider(spider)}. The methods \li{open_spider} and \li{closed_spider} all called when the project is started and ended respectively. The \li{process_item} is called when the \li{parse} method of the spider returns. 
+In addition you can cleanse the data or put it into a database via pipelining.
+In your directory \li{<project name>} you will have a file called \li{pipelines.py}.
+In this file you can create a class that has three methods \li{process_item(item, spider)}, \li{open_spider(spider)} and \li{close_spider(spider)}.
+The methods \li{open_spider} and \li{closed_spider} all called when the project is started and ended respectively.
+The \li{process_item} is called when the \li{parse} method of the spider returns. 
 
 \subsection*{Cleansing}
 
@@ -259,10 +338,14 @@ Once you have written your pipeline code to activate it you go to your \li{setti
 \begin{lstlisting}
 ITEM_PIPELINES = '<directory>.pipelines.<name of class>': 300
 \end{lstlisting}
-where \li{<directory>} is the directory, \li{pipelines} stands for \li{pipelines.py} file, and \li{<name of class>} is what you named your pipeline class. In the example above it would be \li{SportscrapePipeline}. The \li{300} is a precedence operator that takes effect if you have multiple pipelines.
+where \li{<directory>} is the directory, \li{pipelines} stands for \li{pipelines.py} file, and \li{<name of class>} is what you named your pipeline class.
+In the example above it would be \li{SportscrapePipeline}.
+The \li{300} is a precedence operator that takes effect if you have multiple pipelines.
 
 \begin{problem}
-Write a webscraper that starts \url{http://math.byu.edu/peopleresearch/faculty/} clicks on links  in order to store each the professors name, email, office number, phone number (not fax number), and email address. If data is missing on the webpage put null. Store it in a csv file. Turn in the csv file. Call it \li{ProfessorData.csv}.
+Write a webscraper that starts \url{http://math.byu.edu/peopleresearch/faculty/} clicks on links  in order to store each the professors name, email, office number, phone number (not fax number), and email address.
+If data is missing on the webpage put null. Store it in a csv file.
+Turn in the csv file. Call it \li{ProfessorData.csv}.
 
 Hint: Use regular expressions.
 \end{problem}

@@ -1,14 +1,33 @@
 \lab{}{Template Lab}{Template Lab}
-\objective{Outline the various guidelines and practices of writing a new lab.}
+\objective{Outline the various guidelines and practices of writing a new lab.
+These guidelines and practices ensure a consistent and professional lab that will be easy to maintain and read.}
 \label{lab:template}
+
+Through experience, the contributors to this project have discovered several very helpful processes and bits of knowledge.
+Many of these helpful guidelines have been collected into this template lab.
 
 \section*{General Guidelines}
 \begin{itemize}
-\item No datasets or other data files should be committed to the repository.  This makes the repository unnecessarily large.  Data files are distributed via other means.  This is a strictly enforced requirement.  Even if you mistakenly commit a dataset and remove it later, git records the file in its history.  Any pull requests with data sets in the history will not be accepted.
-\item Do not commit large images to the 
-\item Do not use a real person's name in the lab manuals without their consent.  Common names are acceptable, but respect the privacy of others.
+\item No datasets or other data files should be committed to the repository.
+This makes the repository unnecessarily large.
+Data files are distributed via other means.
+This is a strictly enforced requirement.
+Even if you mistakenly commit a dataset and remove it later, git records the file in its history.
+Any pull requests with data sets in the history will not be accepted.
+The best way to remedy this is to create a new, clean, branch from develop and pull in the needed commits from your old working branch (via cherry-picking or other similar method).
+This keeps keeps new contributors happy because they don't have to download huge datasets when clone the repository.
+It is also beneficial since datasets tend to change from time to time.
+\item Do not commit large images to the repository.
+This poses the very same problem that datasets do.
+All plots should be in vector PDF format.
+However, if you image exceeds ~100kb, you may have to use a raster format (such as PNG).
+This is usually the case for bitmaps, in which case a vector PDF is a very bad choice.
+Matplotlib has native support for PNG images.
+In some rare cases, you may have to use JPEG.
+Since JPEG is a lossy format, only use it as a last resort.
+\item Do not use a real person's name in the lab manuals without their consent.
+Common or celebrity names are acceptable, but respect the privacy of others.
 \end{itemize}
-
 
 \section*{\LaTeX File}
 There are several conventions that we expect new labs to adhere to in regard to their usage of \LaTeX.
@@ -18,32 +37,54 @@ Do not write labs using an overtly casual tone.
 
 \subsection{General}
 \begin{itemize}
-\item Labs have a unique label (see labeling conventions)
-\item Objective is coherent and interesting to read. Do not restate the title.
+\item Labs have a unique label (see labeling conventions).
+Refer to the labs by label, \emph{NOT} number.
+Lab numbering changes frequently and is not a reliable way to refer to labs.
+\item The objective is coherent and interesting to read.
+Do \emph{not} restate the title.
+Refer to this lab's objective for an example.
 \end{itemize}
 
 \subsection{\LaTeX}
 \begin{itemize}
-\item Use \texttt{\textbackslash{[}\textbackslash{]}} for \texttt{equation} environments for one line equations.  Never use \$\$ ... \$\$ for math mode.
-\item Use \$ ... \$ for inline equations
-\item \emph{Do not} use \texttt{\textbackslash{frac}} for inline equations.  One half should be represented at $1/2$. \emph{Do use} fractions for the other math environments.
+\item Use \texttt{\textbackslash{[}\textbackslash{]}} for \texttt{equation} environments for one line equations.  
+Never use \$\$ ... \$\$ for math mode.
+Since double dollar signs are pure \TeX, they are completely unsupported in \LaTeX as they bypass all \LaTeX logic for typesetting equation environments.
+\item Use \$ ... \$ for inline equations.
+\item \emph{Do not} use \texttt{\textbackslash{frac}} for inline equations.
+One half should be represented at $1/2$.
+\emph{Do use} fractions for the other math environments.
+This will ensure that inline fractions are still easily readable without a magnifying glass.
 \item Do not include editor/user specific lines in your \LaTeX document.
-\item Use the global math commands that are defined for all the lab manuals.  The most common commands are: \texttt{\textbackslash{norm}}, \texttt{\textbackslash{abs}}, \texttt{\textbackslash{set}}, and \texttt{\textbackslash{setconstruct}}.
-\item You are permitted to define variables and commands inside your lab \emph{only} if you undefine them at the end of you lab.  If you think your new command may be useful for more than just your lab, you may add it to the project wide \texttt{command.tex} file.
-\item Labels follow a format of \textless type:name\textgreater.  The accepted types of labels are: `fig' for figures, `eqn' for equations, `lab' for labs, `table' for tables, `prob' for problems, `lst' for listings, `sec' for sections.
+Not everyone uses the same editors and \LaTeX development environments.
+Adding such user-specific lines clutters the labs and is generally an eyesore.
+\item Use the global math commands that are defined for all the lab manuals.
+The most common commands are: \texttt{\textbackslash{norm}}, \texttt{\textbackslash{abs}}, \texttt{\textbackslash{set}}, and \texttt{\textbackslash{setconstruct}}. 
+These commands are defined in the file \texttt{command.tex} in the root directory of this project.
+Using these globally defined commands helps keep the typesetting consistent across all labs.
+If we decide to change set notation, we only have to change one file instead of hunting down every set defined in every lab and changing them individually.
+\item You are permitted to define variables and commands inside your lab \emph{only} if you undefine them at the end of you lab.
+If you think your new command may be useful for more than just your lab, you may add it to the project wide \texttt{command.tex} file.
+\item Labels follow a format of \textless type:name\textgreater.
+The accepted types of labels are: `fig' for figures, `eqn' for equations, `lab' for labs, `table' for tables, `prob' for problems, `lst' for listings, `sec' for sections.
+This convention is important for easy readability and lab maintenance.
 \end{itemize}
 
 
 \subsection{Code}
 \begin{itemize}
-\item Use listings environment only for code
-\item Use pseudocode environments where needed.  Do not use listings environments or itemized lists for pseudocode.
-\item Use \texttt{>>>} for all inputs inside listings environments.
+\item Use listings environment only for code.
+If you need a monospaced font, use \LaTeX's \texttt{\\texttt\{\}} environment.
+\item Use pseudocode environments where needed.
+Do not use listings environments or itemized lists for pseudocode.
+\item Use \texttt{>>>} for all interactive inputs inside listings environments.
+\item Longer listings should be included from files using \texttt{\\lstinputlisting}.
 \end{itemize}
 
 \subsection{Figures and Tables}
 \begin{itemize}
-\item Don't force position.  The only instance we have encountered so far where position must be enforced is if your figure or table is contained in a problem environment.
+\item Don't force position.
+The only instance we have encountered so far where position must be enforced is if your figure or table is contained in a problem environment.
 \item Width is at most \texttt{\\textwidth}.
 \item For multiple figures, use a subfigure environment.
 \end{itemize}
@@ -74,8 +115,11 @@ We use the problem environment to
 \begin{itemize}
 \item Each problem should be unambiguously stated.
 \item The answer of the problem must be easily checked.
-\item The solution to the problem must be reproducible.  Do not rely random numbers unless you fix the seed.
+\item The solution to the problem must be reproducible.
+Do not rely random numbers unless you fix the seed.
 \item Each problem should be uniquely labeled across the entire lab volume.
+These labels are important when referring to a problem.
+Never refer to a problem by its number in the \LaTeX since the problems numbers, like lab numbers, change frequently.
 \end{itemize}
 
 \section{Python Code}
@@ -84,20 +128,66 @@ There are a few guidelines that attempt to make the code in the project well-doc
 All code in the project must adhere to PEP8 (\url{http://legacy.python.org/dev/peps/pep-0008/}).
 
 \begin{itemize}
-\item No code should be executed on import
-\item Importing scipy and pylab is highly discouraged.  Use the functions from their proper location.
-\item All code must run cross-platform without modification
-\item All libraries used must be available for Linus, OSX, and Windows.
+\item No code should be executed on import.
+This means that all code must be wrapped into functions.
+You can control this behavior by using the construct \li{if __name__ == '__main__'}.
+\item Importing scipy and pylab is highly discouraged.
+Use the functions from their proper location.
+Do not use NumPy functions from the SciPy global namespace.
+For example, do \emph{not} use \li{sp.log}.  Use \li{np.log} instead.
+Functions in the main SciPy namespace are there only for backwards compatibility (see the SciPy documentation).
+\begin{quote}
+``The scipy namespace itself only contains functions imported from numpy.
+These functions still exist for backwards compatibility, but should be imported from numpy directly.'' (SciPy documentation)
+\end{quote}
+\item All code must run cross-platform without modification (excepting code that is clearly designated for specific platforms).
+\item All libraries used should preferably be available for Linux, OSX, and Windows.
 \item All code must be properly organized and decomposed in appropriate files, classes, and functions.
-\item Any global or lazy import are strictly forbidden
-\item No time consuming code should run on import
+\item Any global or lazy import are forbidden.
+A global import is of the form \li{from library import *}.
+This is generally bad practice in Python (See PEP8).
+A lazy import, demonstrated below, does not provide any benefit over standard imports.
+\begin{lstlisting}
+def lazy():
+    import numpy as np
+    return np.sqrt(2.0)
+\end{lstlisting}
+It has the added disadvantage of making NumPy only accessible inside the scope of \li{lazy()}.
+It cannot be used outside of that function, even though the module remains imported.
+All imports should be defined at the top of each source file.
 \end{itemize}
 
 \subsection{Solutions}
 \begin{itemize}
-\item Function names must correspond to the problem label.  Example: \textless prob:newton\_1d\textgreater should have a corresponding solution with a function name of \li{def newton_1d(...)}.
-\item Each function should be documented in an unambiguous manner.  All inputs and outputs of the function must be detailed.
-\item The solutions must be verifably correct.
+\item Function names must correspond to the problem label.
+Example: \textless prob:newton\_1d\textgreater should have a corresponding solution with a function name of \li{def newton_1d(...)}.
+\item Each function should be documented in an unambiguous manner.
+All inputs and outputs of the function must be detailed.
+An example of a well-documented function is shown below.
+\begin{lstlisting}
+def my_function(a, b, c=10):
+    """Calculate a power representing (a^b) % c.
+    This method uses Python's builtin modular exponentiation.
+    
+    Parameters:
+        a: integer
+            The base
+        b: integer
+            The exponent
+        c: integer, optional
+            The modulo
+            
+    Returns:
+        n: integer
+            The value of the expression (a^b) % c
+            
+    Notes:
+        This function uses the very efficient modular exponentiation function builtin
+    """
+    return pow(a, b, c)
+\end{lstlisting}
+
+\item The solutions must be verifiably correct.
 \end{itemize}
 
 \subsection{Plots.py}

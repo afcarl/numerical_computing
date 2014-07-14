@@ -30,7 +30,8 @@ def main(args):
         t.writelines(template_subbed)
     
     #in case we have references, we need to run multiple times.
-    for f in make_util.run_seq:
+    compile_seq = make_util.run_seq if args.biber else make_util.run_seq_no_biber
+    for f in compile_seq:
         ret = f(template)
         if ret.returncode != 0:
             break
@@ -57,4 +58,5 @@ if __name__ == "__main__":
     
     parser = argparse.ArgumentParser(description=descr)
     parser.add_argument('lab', action='store', help="Path to lab LaTeX file")
+    parser.add_argument('--no-biber', action='store_false', help="Run Biber during compile", dest='biber')
     main(parser.parse_args())

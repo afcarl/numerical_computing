@@ -36,3 +36,4 @@ run_seq = [run_latex,
            run_biber,
            run_latex,
            run_latex]
+run_seq_no_biber = [run_latex, run_latex]

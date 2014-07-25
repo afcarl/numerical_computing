@@ -64,9 +64,53 @@ We multiply these numbers to get $n=pq$ which is our modulus.
 However, if $n$ is not that big, we can easily factor it, defeating the whole purpose of RSA.
 The security of RSA largely reduces down to how well we choose starting primes.
 If we pick primes that are too small, we sacrifice security.
-How do we pick large primes?  We can start enumerating them $2, 3, 5, 7, 11, \dots$.
-\begin{theorem}
-If $p$ is prime, then for any positive integer $a$, $1 \leq a < p$, $a^{p-1} - 1 \equiv 0 \pmod{p}$
+How do we pick large primes?
+We can use sieves to generate primes, but doing so would take lots of time and lots of memory.
+It would be better if we could choose a number and determine if it is prime or not.
+
+Fortunately, mathematics has developed a few tools that can help us out.
+One of the first steps was given by Fermat.
+\begin{theorem}[Fermat's Little Theorem]
+If $p$ is prime, then for a natural number $a$, $a^{p-1} - 1 \equiv 0 \pmod{p}$
 \end{theorem}
+But, to use this we have start with a prime number.
+However, if we have a candidate for $p$ and it satisifies the condition can we say anything about $p$?
+The answer is yes, but we cannot say that $p$ is prime.
+We can only say that $p$ might be prime.
+\begin{example}
+Suppose $p=37$.
+We want to know if $p$ is prime.  We choose $a=8$.
+\[
+8^{36} - 1 \equiv 0 \pmod{37} 
+\]
+We call $8$ the witness number.  Think of as, \emph{$8$ says that $37$ is prime}.
+This is the probabilistic part of Fermat's theorem.
+We try enough witness numbers until we are convinced that our candidate number is prime.
+Trying enough prime numbers, we will eventually be convinced that $37$ is prime, which it is.
+\end{example}
 
+\begin{example}
+Let's check the primality of $1729$.
+We will use $a=145$ as a witness number.
+\[
+145^{1728} \equiv 1 \pmod{1729}
+\]
+It appears that $1729$ is prime.
+Let's try another witness number, $a=583$.
+\[
+583^{1728} \equiv 1 \pmod{1729}
+\]
+Let's try one last witness number, $a=945$.
+\[
+945^{1728} \equiv 742 \not\equiv 1 \pmod{1729}
+\]
+We have a problem.  
+Our candidate is not behaving like we would expect a prime to behave.
+But several witnesses verified that our number was prime.  What happened?
+Our number, $1729$ is not really prime.  Its prime factors are $7$, $13$, and $19$. 
+It is a special number called a Carmichael number.
+Because of these numbers, we have to be careful with Fermat's Little Theorem.
+More stringent primality tests exist, but are beyond the scope of this lab.
+\end{example}
 
+\section*{RSA Algorithm}

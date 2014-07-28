@@ -114,3 +114,23 @@ More stringent primality tests exist, but are beyond the scope of this lab.
 \end{example}
 
 \section*{RSA Algorithm}
+Bob wants to send a secret message to Alice.
+Eve is trying to intercept this message.
+Bob and Alice agree to use RSA to exchange the secret message.
+Bob and Alice need to generate their keys.
+Each generate a pair of keys, a private and a public one.
+Both Bob and Alice need to keep their private keys secret.
+Anyone with Alice's public key can send her a message that only she can decrypt.
+Bob obtains a copy of Alice's pulic key and encrypt his message using it.
+Alice decrypts Bob's message using her private key, and reads the message.
+
+RSA involves generating a private key and a public key.
+
+We begin by finding two large prime numbers.
+By large, we mean several hundred digits.
+
+\begin{problem}
+ Find two large prime numbers that are near each other
+\end{problem}
+
+

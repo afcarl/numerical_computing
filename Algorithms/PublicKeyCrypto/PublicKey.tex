@@ -147,11 +147,13 @@ Next we need to choose an encryption exponent, $e$, such that $1 < e < \phi(n)$ 
 Euler's totient function is 
 Then our decryption exponent, $d$, must naturally be an inverse of $e$ mod $\phi(n)$.
 In other words, we need $de \equiv 1 \pmod{\phi(n)}$.
+You will need to write your own function that finds the inverse of $e$ mod $\phi(n)$ using the Extended Euclidean Algorithm.
 We distribute $(e, n)$ as the public key and need to make sure that $(d, n)$ remains private.
 After the keys are created, we have no further need of $p$ or $q$.
 \end{problem}
 
 Before we can encrypt and decrypt a text message, we need to convert it to a number first.
+It is useful to understand the code below.
 \begin{lstlisting}
 # Recipe from itertools module in standard library
 def grouper(iterable, n, fillvalue=None):
@@ -160,7 +162,7 @@ def grouper(iterable, n, fillvalue=None):
     args = [iter(iterable)] * n
     return izip_longest(fillvalue=fillvalue, *args)
     
-def s2i(msg):
+def a2i(msg):
     '''Convert an ASCII message to an integer.'''
     # bytearray will give us the ASCII values for each character
     if not isinstance(msg, bytearray):
@@ -171,7 +173,7 @@ def s2i(msg):
         binmsg.append(bin(c)[2:].zfill(8))
     return int(''.join(binmsg), 2)
 
-def i2s(msg):
+def i2a(msg):
     '''Convert an integer to an ASCII message'''
     # convert to binary first
     binmsg = bin(msg)[2:]
@@ -183,4 +185,11 @@ def i2s(msg):
         msg.append(int(''.join(block), 2))
     return msg
 \end{lstlisting}
+
+\begin{problem}
+Encrypt the message: \emph{Simon sells seashells by the seashore.}
+Let $p=83285677$ and $q=2848968679$.
+Choose $e=65593$.
+Verify your encryption is correct by decrypting the message and checking the result.
+\end{problem}
 

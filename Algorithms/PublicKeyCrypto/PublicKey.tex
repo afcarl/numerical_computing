@@ -112,6 +112,7 @@ It is a special number called a Carmichael number.
 Because of these numbers, we have to be careful with Fermat's Little Theorem.
 More stringent primality tests exist, but are beyond the scope of this lab.
 \end{example}
+We have to remember that the Fermat test is really a test for compositeness, not primality.
 
 \section*{RSA Algorithm}
 Bob wants to send a secret message to Alice.
@@ -129,8 +130,57 @@ RSA involves generating a private key and a public key.
 We begin by finding two large prime numbers.
 By large, we mean several hundred digits.
 
+RSA can be succinctly summarised as the following operations for encryption and decryption respectively
+\[
+c \equiv m^e \pmod{n}
+\]
+\[
+m \equiv c^d \pmod{n}
+\]
+
 \begin{problem}
- Find two large prime numbers that are near each other
+Generate a public/private key pair.
+
+We do this by first multiplying the two primes, $p$ and $q$, together to get $n=pq$.
+This will act as the modulus for future operations.
+Next we need to choose an encryption exponent, $e$, such that $1 < e < \phi(n)$ and $\gcd(e, \phi(n)) = 1$.
+Euler's totient function is 
+Then our decryption exponent, $d$, must naturally be an inverse of $e$ mod $\phi(n)$.
+In other words, we need $de \equiv 1 \pmod{\phi(n)}$.
+We distribute $(e, n)$ as the public key and need to make sure that $(d, n)$ remains private.
+After the keys are created, we have no further need of $p$ or $q$.
 \end{problem}
 
+Before we can encrypt and decrypt a text message, we need to convert it to a number first.
+\begin{lstlisting}
+# Recipe from itertools module in standard library
+def grouper(iterable, n, fillvalue=None):
+    "Collect data into fixed-length chunks or blocks"
+    # grouper('ABCDEFG', 3, 'x') --> ABC DEF Gxx
+    args = [iter(iterable)] * n
+    return izip_longest(fillvalue=fillvalue, *args)
+    
+def s2i(msg):
+    '''Convert an ASCII message to an integer.'''
+    # bytearray will give us the ASCII values for each character
+    if not isinstance(msg, bytearray):
+        msg = bytearray(msg)
+    binmsg = []
+    # convert each character to binary
+    for c in msg:
+        binmsg.append(bin(c)[2:].zfill(8))
+    return int(''.join(binmsg), 2)
+
+def i2s(msg):
+    '''Convert an integer to an ASCII message'''
+    # convert to binary first
+    binmsg = bin(msg)[2:]
+    # we need to pad the message so length is divisible by 8
+    binmsg = "0"*(8-(len(binmsg)%8)) + binmsg
+    msg = bytearray()
+    for block in grouper(binmsg, 8):
+        # convert block of 8 bits back to ASCII
+        msg.append(int(''.join(block), 2))
+    return msg
+\end{lstlisting}
 

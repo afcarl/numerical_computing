@@ -51,8 +51,8 @@ Calculating a modular exponent in this way leads to a very desirable $O(\log_2 e
 \begin{problem}
 Write a function that will perform modular exponentiation using the right-to-left binary method.
 Compare the performance of \ref{prob:naivepower} and your new implementation.
-Note that Python's built-in function, pow, performs this type of fast modular exponentiation.
-We expect you to use it over your own implementation in the future.
+Note that Python's built-in function, \li{pow()}, performs this type of fast modular exponentiation.
+We expect you to use it instead of your own implementation in the future.
 \label{prob:rlbpower}
 \end{problem}
 
@@ -113,6 +113,20 @@ Because of these numbers, we have to be careful with Fermat's Little Theorem.
 More stringent primality tests exist, but are beyond the scope of this lab.
 \end{example}
 We have to remember that the Fermat test is really a test for compositeness, not primality.
+
+\begin{problem}
+For any candidate prime number, $n$, all the integers $2 \geq a < n$ can serve as a witness number.
+Each of these possible witness numbers will either prove the compositeness of $n$ or give no information.
+If we randomly choose a witness number, we will select a number in one of these two sets.
+Supposing we chose a good random number generator, we can become convinced to a very high degree that $n$ is likely prime with just a few witness numbers.
+
+Write a function that will return the number of witnesses that prove the compositeness of $n$.
+What is the ratio of these witness numbers to all the numbers $2 \geq a < n$?
+Suppose we were to choose witness numbers at random.  
+How many random witness number must we choose to be $99$\% sure that $n$ is prime?
+Remember that each new witness number increases the confidence that $n$ is probably prime.
+\label{prob:prime_confidence}
+\end{problem}
 
 \section*{RSA Algorithm}
 Bob wants to send a secret message to Alice.
@@ -192,4 +206,10 @@ Let $p=83285677$ and $q=2848968679$.
 Choose $e=65593$.
 Verify your encryption is correct by decrypting the message and checking the result.
 \end{problem}
+
+\section*{Breaking RSA}
+Much of the security of RSA is dependent on the choices of numbers we use for encryption.
+If we choose prime numbers or our encryption exponent incorrectly, we can seriously compromise the strength of RSA.
+
+If our encryption exponent is too small, then it makes 
 

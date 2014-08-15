@@ -207,6 +207,46 @@ Choose $e=65593$.
 Verify your encryption is correct by decrypting the message and checking the result.
 \end{problem}
 
+\subsection*{Digital Signatures}
+Suppose Alice wants to confirm that Bob was really the sender of a message.
+How would she do this?
+Using the RSA algorithm, you can easily sign a message to verify authenticity.
+This is done by encrypting the message using Alice's public key and then decrypting the result with Bob's private key.
+Order is very important.  
+Switching the two steps will result in the same message, but there are security vulnerablilities doing that way.
+
+Another, more commonly used, method for signing messages is to sign a hash of the message.
+Using a known good hash function, we hash the message (before encrypting), sign the hash, and send it along with the encrypted message.
+The exchange would be as follows for the message \emph{Alice, the password is 123password.}
+Suppose Bob's private and public keys respectively are (11407237936868069647229007915206939, 91340897874775971350115591460548127) and (54323, 91340897874775971350115591460548127).
+Alice's private and public keys respectively are (200302109105861235857586283559067187, 274592902010736258475323322324306807) and (68923, 274592902010736258475323322324306807L).
+First Bob would hash the message.  We will use SHA256 hash algorithm which is considered cryptographically secure.
+The hash of the message (including the period symbol) is: b113b491a7ada55a888cf112005988ce5475d5fc909cafae770a4e08b8b3980c.
+Bob would encrypt the message using Alice's public key and decrypt the hash.
+The result would be 
+
+
+RSA encryption in Python can be accomplished very easily with a library called PyCrypto.
+This library contains many secure hash functions, random number generators, and encryption classes.
+Many programs use PyCrypto for their security needs.
+\begin{warn}
+Make certain that you are using the latest version of PyCrypto.
+Security software is updated often to fix security vulnerablilities and bugs.
+The current version of PyCrypto at the time of writing is version 2.6.1.
+\end{warn}
+
+The RSA module in PyCrypto is located in the PublicKey module.
+Let's try a small example using PyCrypto.
+The library allows us to explicity construct a key, or generate a key itself.
+\begin{lstlisting}
+>>> from Crypto.PublicKey import RSA
+>>> from Crypto import Random
+>>> rng = Random.new()
+\end{lstlisting}
+
+
+
+
 \section*{Breaking RSA}
 Much of the security of RSA is dependent on the choices of numbers we use for encryption.
 If we choose prime numbers or our encryption exponent incorrectly, we can seriously compromise the strength of RSA.

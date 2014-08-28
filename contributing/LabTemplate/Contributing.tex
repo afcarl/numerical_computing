@@ -52,7 +52,7 @@ Never use \$\$ ... \$\$ for math mode.
 Since double dollar signs are pure \TeX, they are completely unsupported in \LaTeX as they bypass all \LaTeX logic for typesetting equation environments.
 \item Use \$ ... \$ for inline equations.
 \item \emph{Do not} use \texttt{\textbackslash{frac}} for inline equations.
-One half should be represented at $1/2$.
+One half should be represented as $1/2$ in a paragraph.
 \emph{Do use} fractions for the other math environments.
 This will ensure that inline fractions are still easily readable without a magnifying glass.
 \item Do not include editor/user specific lines in your \LaTeX document.
@@ -63,6 +63,11 @@ The most common commands are: \texttt{\textbackslash{norm}}, \texttt{\textbacksl
 These commands are defined in the file \texttt{command.tex} in the root directory of this project.
 Using these globally defined commands helps keep the typesetting consistent across all labs.
 If we decide to change set notation, we only have to change one file instead of hunting down every set defined in every lab and changing them individually.
+\item \textbf{Do not} type words in math mode!  Math mode will typeset each letter as a separate variable.
+The worst offenders of this are $sin$, $cos$, $det$, etc.
+These have special LaTeX commands that will properly typeset them.
+For example $cos$ (\texttt{\$cos\$}) vs $\cos$ (\texttt{\$\textbackslash cos\$}).
+If you need to include text in a math environment, AMSMath includes the \textbackslash text\{\} command.
 \item You are permitted to define variables and commands inside your lab \emph{only} if you undefine them at the end of you lab.
 If you think your new command may be useful for more than just your lab, you may add it to the project wide \texttt{command.tex} file.
 \item Labels follow a format of \textless type:name\textgreater.
@@ -74,18 +79,21 @@ This convention is important for easy readability and lab maintenance.
 \subsection{Code}
 \begin{itemize}
 \item Use listings environment only for code.
-If you need a monospaced font, use \LaTeX's \texttt{\\texttt\{\}} environment.
+If you need a monospaced font, use \LaTeX's \texttt{\textbackslash texttt\{\}} environment.
 \item Use pseudocode environments where needed.
 Do not use listings environments or itemized lists for pseudocode.
 \item Use \texttt{>>>} for all interactive inputs inside listings environments.
-\item Longer listings should be included from files using \texttt{\\lstinputlisting}.
+\item Longer listings should be included from files using \texttt{\textbackslash lstinputlisting}.
+\item Code segments in the lab, if concatenated sequentially will form a c
+\item Typically, all import statements for the lab should be placed at the very beginning of the first code segment.
+The only exception to this is when we introduce a new package in the middle of a lab.
 \end{itemize}
 
 \subsection{Figures and Tables}
 \begin{itemize}
 \item Don't force position.
 The only instance we have encountered so far where position must be enforced is if your figure or table is contained in a problem environment.
-\item Width is at most \texttt{\\textwidth}.
+\item Width is at most \texttt{\textbackslash textwidth}.
 \item For multiple figures, use a subfigure environment.
 \end{itemize}
 
@@ -107,6 +115,17 @@ matplotlib.rcParams = matplotlib.rc_params_from_file('../../matplotlibrc')
 \end{lstlisting}
 This must be done before importing \li{matplotlib.pyplot}.
 
+The main two requirements for a plotting script are:
+\begin{itemize}
+\item Should only execute code when run from the commandline
+\item All plots needed by the lab should be generated in a single execution of the script without any human intervention
+\end{itemize}
+
+No interactive plotting features of matplotlib should be used.  
+Never use the \li{show()} method on a plot.  
+Always write to plot directly to file.
+\textbf{Never import pylab!}.
+
 \subsection{Problems}
 Each lab should include a set of problems that the student should solve to demonstrate their comprehension of the learning objectives of the lab.
 A good problem is one that is clearly written and has a unique reproducible solution.
@@ -126,6 +145,9 @@ Never refer to a problem by its number in the \LaTeX since the problems numbers,
 There are a few guidelines that attempt to make the code in the project well-documented, consistent, and readable.
 
 All code in the project must adhere to PEP8 (\url{http://legacy.python.org/dev/peps/pep-0008/}).
+There is a convenient Python package available in PyPi named pep8 that will detect violations of PEP8.
+Students will tend write code in the same pattern that they have been taught.
+So, we want the code that the students see to be of outstanding quality.
 
 \begin{itemize}
 \item No code should be executed on import.
@@ -159,7 +181,7 @@ All imports should be defined at the top of each source file.
 
 \subsection{Solutions}
 \begin{itemize}
-\item Function names must correspond to the problem label.
+\item Function names should correspond to the problem label.
 Example: \textless prob:newton\_1d\textgreater should have a corresponding solution with a function name of \li{def newton_1d(...)}.
 \item Each function should be documented in an unambiguous manner.
 All inputs and outputs of the function must be detailed.
@@ -186,21 +208,9 @@ def my_function(a, b, c=10):
     """
     return pow(a, b, c)
 \end{lstlisting}
-
 \item The solutions must be verifiably correct.
 \end{itemize}
 
-\subsection{Plots.py}
-Plots are designed to be automatically generated.
-To accomplish this goal, your \texttt{plots.py} file needs follow a specified structure.
-\begin{itemize}
-\item Always import the project's \texttt{matplotlibrc} file in the first two lines of code
-\item All plots must be wrapped in functions
-\item No interactive plotting features of matplotlib should be used.  Never use the \li{show()} method on a plot.  Always write to plot directly to file.
-\item Always output plots to a vector pdf with a filename that agrees with the function name and the plot label.
-\end{itemize}
-Below is a sample \texttt{plots.py}.
-\lstinputlisting{plots.py}
 
 
 

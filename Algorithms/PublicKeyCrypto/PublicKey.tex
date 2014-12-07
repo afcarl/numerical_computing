@@ -237,15 +237,28 @@ The current version of PyCrypto at the time of writing is version 2.6.1.
 
 The RSA module in PyCrypto is located in the PublicKey module.
 Let's try a small example using PyCrypto.
-The library allows us to explicity construct a key, or generate a key itself.
+The library allows us to explicity construct a key, or generate a key automatically.
 \begin{lstlisting}
 >>> from Crypto.PublicKey import RSA
 >>> from Crypto import Random
->>> rng = Random.new()
+>>> keypair = RSA.generate(2048) #generate a 2048-bit RSA key
+>>> publickey = keypair.publickey()
+>>> share_this = publickey.exportkey()
 \end{lstlisting}
 
+\begin{problem}[Group Project]
+Generate private and public keys using PyCrypto.
+Share your public keys with everyone in the group.
+Encrypt and sign a message for someone in the group and send it to the entire group.
 
-
+\begin{enumerate}
+\item Decrypt the message addressed for you.
+\item Attempt to decrypt a message addressed for someone else in the group.
+\item Verify that the message has been signed
+\item Verify the signature.  Determine who sent the message.
+\item Report the message
+\end{enumerate}
+\end{problem}
 
 \section*{Breaking RSA}
 Much of the security of RSA is dependent on the choices of numbers we use for encryption.
